@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-padthv1-preset">
+    <sub-class-of type="text/xml"/>
+    <comment>padthv1 preset</comment>
+    <glob pattern="*.padthv1"/>
+    <icon name="org.rncbc.padthv1.application-x-padthv1-preset"/>
+  </mime-type>
+</mime-info>

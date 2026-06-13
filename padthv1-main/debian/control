@@ -1,0 +1,29 @@
+Source: padthv1
+Section: sound
+Priority: optional
+Maintainer: Rui Nuno Capela <rncbc@rncbc.org>
+Build-Depends: debhelper (>= 11), cmake, pkg-config,
+  qtbase6.11-static (>= 6.11), qttools6.11-static (>= 6.11),
+  qtsvg6.11-static (>= 6.11), qttranslations6.11-static (>= 6.11),
+  libjack-dev | libjack-jackd2-dev, libasound2-dev,
+  lv2-dev, liblo-dev, libfftw3-dev
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: padthv1-jack
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libjack0 | libjack-jackd2-0
+Replaces: padthv1-common (<= ${source:Version}), padthv1 (<= ${source:Version})
+Description: An old-school polyphonic additive synthesizer - JACK standalone
+  An old-school all-digital polyphonic additive synthesizer with stereo fx.
+  .
+  This package provides the standalone JACK client application (padthv1_jack)
+
+Package: padthv1-lv2
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Replaces: padthv1-common (<= ${source:Version})
+Description: An old-school polyphonic additive synthesizer  - LV2 plugin
+  An old-school all-digital polyphonic additive synthesizer with stereo fx.
+  .
+  This package provides the LV2 plugin (http://padthv1.sourceforge.net/lv2)

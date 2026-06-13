@@ -1,0 +1,151 @@
+#
+# spec file for package padthv1
+#
+# Copyright (C) 2017-2026, rncbc aka Rui Nuno Capela. All rights reserved.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
+#
+
+Summary:	An old-school polyphonic additive synthesizer
+Name:		padthv1
+Version:	1.4.2
+Release:	13.1
+License:	GPL-2.0-or-later
+Group:		Productivity/Multimedia/Sound/Midi
+Source: 	%{name}-%{version}.tar.gz
+URL:		http://padthv1.sourceforge.net
+#Packager:	rncbc.org
+
+%global debug_package %{nil}
+
+BuildRequires:	coreutils
+BuildRequires:	pkgconfig
+BuildRequires:	glibc-devel
+BuildRequires:	cmake >= 3.15
+%if 0%{?sle_version} >= 150200 && 0%{?is_opensuse}
+BuildRequires:	gcc10 >= 10
+BuildRequires:	gcc10-c++ >= 10
+%define _GCC	/usr/bin/gcc-10
+%define _GXX	/usr/bin/g++-10
+%else
+BuildRequires:	gcc >= 10
+BuildRequires:	gcc-c++ >= 10
+%define _GCC	/usr/bin/gcc
+%define _GXX	/usr/bin/g++
+%endif
+
+BuildRequires:	qtbase6.11-static >= 6.11
+BuildRequires:	qttools6.11-static
+BuildRequires:	qtsvg6.11-static
+BuildRequires:	qttranslations6.11-static
+
+%if %{defined fedora}
+BuildRequires:	jack-audio-connection-kit-devel
+%else
+BuildRequires:	pkgconfig(jack)
+%endif
+BuildRequires:	pkgconfig(alsa)
+
+BuildRequires:	pkgconfig(fftw3)
+BuildRequires:	pkgconfig(liblo)
+BuildRequires:	pkgconfig(lv2)
+
+BuildRequires:	pkgconfig(egl)
+
+%description
+  An old-school all-digital polyphonic additive synthesizer with stereo fx.
+
+  
+%package -n %{name}-jack
+Summary:	An old-school polyphonic additive synthesizer - JACK standalone
+Provides:	%{name}_jack
+Obsoletes:	%{name}-common <= %{version}, %{name} <= %{version}
+
+%description -n %{name}-jack
+  An old-school all-digital polyphonic additive synthesizer with stereo fx.
+
+  This package provides the standalone JACK client application (padthv1_jack)
+
+
+%package -n %{name}-lv2
+Summary:	An old-school polyphonic additive synthesizer - LV2 plugin
+Provides:	%{name}_lv2, %{name}_lv2ui
+Obsoletes:	%{name}-common <= %{version}
+
+%description -n %{name}-lv2
+  An old-school all-digital polyphonic additive synthesizer with stereo fx.
+
+  This package provides the LV2 plugin (http://padthv1.sourceforge.net/lv2)
+
+
+%prep
+%setup -q
+
+%build
+source /opt/qt6.11-static/bin/qt6.11-static-env.sh
+CXX=%{_GXX} CC=%{_GCC} \
+cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -Wno-dev -B build
+cmake --build build %{?_smp_mflags}
+
+%install
+DESTDIR="%{buildroot}" \
+cmake --install build
+
+
+%files -n %{name}-jack
+%license LICENSE
+%doc README ChangeLog
+#dir %{_datadir}/applications
+%dir %{_datadir}/metainfo
+#dir %{_datadir}/mime
+#dir %{_datadir}/mime/packages
+%dir %{_datadir}/icons/hicolor
+%dir %{_datadir}/icons/hicolor/32x32
+%dir %{_datadir}/icons/hicolor/32x32/apps
+%dir %{_datadir}/icons/hicolor/32x32/mimetypes
+%dir %{_datadir}/icons/hicolor/scalable
+%dir %{_datadir}/icons/hicolor/scalable/apps
+%dir %{_datadir}/icons/hicolor/scalable/mimetypes
+#dir %{_datadir}/man
+#dir %{_datadir}/man/man1
+#dir %{_datadir}/man/fr
+#dir %{_datadir}/man/fr/man1
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/palette
+%{_bindir}/%{name}_jack
+%{_datadir}/metainfo/org.rncbc.%{name}.metainfo.xml
+%{_datadir}/applications/org.rncbc.%{name}.desktop
+%{_datadir}/mime/packages/org.rncbc.%{name}.xml
+%{_datadir}/icons/hicolor/32x32/apps/org.rncbc.%{name}.png
+%{_datadir}/icons/hicolor/scalable/apps/org.rncbc.%{name}.svg
+%{_datadir}/icons/hicolor/32x32/mimetypes/org.rncbc.%{name}.application-x-%{name}*.png
+%{_datadir}/icons/hicolor/scalable/mimetypes/org.rncbc.%{name}.application-x-%{name}*.svg
+%{_datadir}/man/man1/%{name}.1.gz
+%{_datadir}/man/fr/man1/%{name}.1.gz
+%{_datadir}/%{name}/palette/*.conf
+
+%files -n %{name}-lv2
+%dir %{_libdir}/lv2
+%dir %{_libdir}/lv2/%{name}.lv2
+%{_libdir}/lv2/%{name}.lv2/manifest.ttl
+%{_libdir}/lv2/%{name}.lv2/%{name}.ttl
+%{_libdir}/lv2/%{name}.lv2/%{name}.so
+%{_libdir}/lv2/%{name}.lv2/%{name}_ui.ttl
+
+
+%changelog
+* Thu Apr 30 2026 Rui Nuno Capela <rncbc@rncbc.org> 1.4.2
+- A Spring'26 Release.
+* Wed Mar 18 2026 Rui Nuno Capela <rncbc@rncbc.org> 1.4.1
+- An Early-Spring'26 Release.
+* Thu Feb 12 2026 Rui Nuno Capela <rncbc@rncbc.org> 1.4.0
+- A Mid-Winter'26 Release.

@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+#
+QTDIR ?= /opt/qt6.11-static
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	# Add here commands to configure the package.
+	cmake -DCMAKE_INSTALL_PREFIX=/usr  \
+	      -DCMAKE_INSTALL_LIBDIR=lib   \
+	      -DCMAKE_PREFIX_PATH=$(QTDIR) .
+	# --- end custom part for configure
